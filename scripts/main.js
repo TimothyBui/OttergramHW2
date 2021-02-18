@@ -5,8 +5,6 @@ var THUMBNAIL_LINK_SELECTOR = '[data-image-role="trigger"]';
 var HIDDEN_DETAIL_CLASS = 'hidden-detail';
 var TINY_EFFECT_CLASS = 'is-tiny';
 var ESC_KEY = 27;
-var LEFT_BUTTON = 'previous';
-var RIGHT_BUTTON = 'next';
 
 function setDetails(imageUrl, titleText) {
   'use strict';
@@ -18,11 +16,13 @@ function setDetails(imageUrl, titleText) {
   detailTitle.textContent = titleText;
 }
 
+// get image location
 function imageFromThumb(thumbnail) {
   'use strict';
   return thumbnail.getAttribute('data-image-url');
 }
 
+// get image title
 function titleFromThumb(thumbnail) {
   'use strict';
   return thumbnail.getAttribute('data-image-title')
@@ -74,54 +74,49 @@ function addKeyPressHandler() {
   });
 }
 
+// logic for previous and next buttons
+function buttonLogic(thumbList, counter) {
+  var imgList = getThumbnailsArray();
+  for (var i = 0; i < imgList.length; i++) {
+    imgList[i] = imgList[i].href;
+  }
+  var imgIndex = imgList.indexOf(document.querySelector('.detail-image-frame > img').src);
+  if (counter === 0) {
+    if (imgIndex === 0) {
+      imgIndex = imgList.length - 1;
+    } else {
+      imgIndex = imgIndex - 1;
+    }
+  }
+  if (counter === 1) {
+    if (imgIndex === imgList.length - 1) {
+      imgIndex = 0
+    } else {
+      imgIndex = imgIndex + 1;
+    }
+  }
+  thumbList[imgIndex].click();
+}
+
+function addButtonHandler(thumbList) {
+  'use strict';
+  document.getElementById("previous").addEventListener("click", function (event) {
+    event.preventDefault();
+    buttonLogic(thumbList, 0);
+  });
+
+  document.getElementById("next").addEventListener("click", function (event) {
+    event.preventDefault();
+    buttonLogic(thumbList, 1);
+  });
+}
+
 function initializeEvents() {
   'use strict';
   var thumbnails = getThumbnailsArray();
   thumbnails.forEach(addThumbClickHandler);
   addKeyPressHandler();
-
-  document.getElementById("previous").addEventListener("click", function(event) {
-    event.preventDefault();
-    previousButton();
-  });
-  
-  document.getElementById("next").addEventListener("click", function(event) {
-    event.preventDefault();
-    nextButton();
-  });
+  addButtonHandler(thumbnails);
 }
 
 initializeEvents();
-
-function getImagesArray() {
-  "use strict";
-  var imgArray = getThumbnailsArray();
-  for (var i = 0; i < imgArray.length; i++) {
-    imgArray[i] = imgArray[i].href;
-  }
-  return imgArray;
-}
-
-function previousButton() {
-  var imgArray = getImagesArray();
-  var thumbArray = getThumbnailsArray();
-  var curr = imgArray.indexOf(document.getElementById("detail-image").src);
-  if (curr == 0) {
-    curr = imgArray.length - 1;
-  } else {
-    curr = curr - 1;
-  }
-  thumbArray[curr].click();
-}
-
-function nextButton() {
-  var imgArray = getImagesArray();
-  var thumbArray = getThumbnailsArray();
-  var curr = imgArray.indexOf(document.getElementById("detail-image").src);
-  if (curr == imgArray.length-1) {
-    curr = 0;
-  } else {
-    curr = curr + 1;
-  }
-  thumbArray[curr].click();
-}

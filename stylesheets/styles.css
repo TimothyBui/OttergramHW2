@@ -102,9 +102,9 @@ body {
   display: flex;
   justify-content: center;
   align-items: center;
-  max-width: 80%;
+  max-width: 85%;
   max-height: 100%;
-  
+
 }
 
 .detail-image-frame {
@@ -162,7 +162,7 @@ body {
     max-width: 260px;
   }
 
-  .thumbnail-item + .thumbnail-item {
+  .thumbnail-item+.thumbnail-item {
     margin-top: 2em;
   }
 }
